@@ -9,7 +9,7 @@ chomp (my $cpassword = <STDIN>);
 print "Password enable mode: ";
 chomp (my $enapassword = <STDIN>);
 my $log = "srn.log";
-warn "File $log alreajjjjjjjjjjjjjjjjjdy exist." if -e $log;
+warn "File $log already exist." if -e $log;
 &emts;
 &go_file;
 sub emts {
