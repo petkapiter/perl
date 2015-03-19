@@ -1,15 +1,15 @@
 #!/usr/bin/perl -w
 use Net::Telnet::Cisco;
-print "Введите IP устройства: " ;
+print "Host IP: " ;
 chomp (my $cdevice = <STDIN>);
-print "Имя пользователя: ";
+print "Username: ";
 chomp (my $clogin = <STDIN>);
-print "Введите пароль: ";
+print "Password: ";
 chomp (my $cpassword = <STDIN>);
-print "Введите пароль enable: ";
+print "Password enable mode: ";
 chomp (my $enapassword = <STDIN>);
 my $log = "srn.log";
-warn "Файл $log уже существует" if -e $log;
+warn "File $log already exist." if -e $log;
 &emts;
 &go_file;
 sub emts {
