@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 	use strict;
 	use warnings;
 	use Net::Appliance::Session;
@@ -11,8 +11,12 @@
 	my $secret;
 	GetOptions('help' =>\$help, 'ip=s' =>\$host, 'login=s' => \$login, 'password=s' => \$password, 'enable=s' => \$secret);
 
-		if (defined $help){
-		print "--ip or -i		Host IP\n--login or -l		Username\n--password or -p	password\n--enable or -e		Secret Password\n";
+		unless (defined $help){
+		print "-i, --ip		Host IP\n";
+		print "-l, --login		Username\n";
+		print "-p, --password		Password\n";
+		print "-e, --enable		Secret Password\n";
+		print "-h, --help		display this help and exit\n";
 		exit;
 		}
 
