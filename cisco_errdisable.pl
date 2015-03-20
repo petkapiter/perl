@@ -4,11 +4,17 @@
 	use Net::Appliance::Session;
 	use Getopt::Long;
 	
+	my $help;
 	my $host;
 	my $login;
 	my $password;
 	my $secret;
-	GetOptions('host=s' =>\$host, 'login=s' => \$login, 'password=s' => \$password, 'enable=s' => \$secret);
+	GetOptions('help' =>\$help, 'ip=s' =>\$host, 'login=s' => \$login, 'password=s' => \$password, 'enable=s' => \$secret);
+
+		if (defined $help){
+		print "--ip or -i		Host IP\n--login or -l		Username\n--password or -p	password\n--enable or -e		Secret Password\n";
+		exit;
+		}
 
 		unless (defined $host){
 			print "Host IP: " ;
