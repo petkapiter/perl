@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 	use strict;
+	use warnings;
 	use  Net::Appliance::Session;
 	print "Host IP: " ;
 	chomp (my $host = <STDIN>);
@@ -9,6 +10,7 @@
 	chomp (my $password = <STDIN>);
 	print "Enable Password: ";
         chomp (my $secret = <STDIN>);
+	
 	my $ssh = Net::Appliance::Session->new({ 
 		personality => 'ios',
 		transport => 'SSH',
@@ -19,6 +21,9 @@
 		privileged_password => $secret
 		});
 	$ssh->begin_privileged;
-	print $ssh->cmd('show logging');
+	print $ssh->cmd('show errdisable recovery');
 	$ssh->end_privileged;
 	$ssh ->close;
+
+	
+	
