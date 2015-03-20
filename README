@@ -1,1 +1,2 @@
-cisco_srn.pl - вытаскиваем серийники кошки и всех модулей и пишем в лог
+cisco_srn.pl		show inwentory
+cisco_errdisable.pl	clear errdisable
