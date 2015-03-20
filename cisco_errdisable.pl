@@ -1,18 +1,19 @@
 #!/usr/bin/perl -w
 	use strict;
-	use Net::SSH::Perl;
+	use  Net::Appliance::Session;
 	print "Host IP: " ;
 	chomp (my $host = <STDIN>);
 	print "Username: ";
 	chomp (my $login = <STDIN>);
 	print "Password: ";
 	chomp (my $password = <STDIN>);
-	my $cmd = "ls -hal";
-&connect;
-print "Ok\n";
-sub connect {
-	my $ssh = Net::SSH::Perl->new($host);
-	$ssh->login($login, $password);
-	my ($out) = $ssh->cmd("$cmd");
-	print ("$out\n");
-}
+	my $ssh = Net::Appliance::Session->new({ 
+		personality => 'ios',
+		transport => 'SSH',
+		host => $host});
+	$ssh->connect({
+		username => $login, 
+		password => $password
+		});
+	print $ssh->cmd('show errdisable recovery');
+	$ssh ->close;
