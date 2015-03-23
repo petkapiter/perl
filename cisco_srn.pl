@@ -14,7 +14,7 @@ warn "File $log already exist." if -e $log;
 &go_file;
 sub emts {
          my $session = Net::Telnet::Cisco->new(Host => $cdevice,
-                                               Timeout => 20,
+                                               Timeout => 5,
                                                Input_log => $log,
                                                );
         $session->login ($clogin, $cpassword);

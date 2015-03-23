@@ -3,6 +3,8 @@
 	use warnings;
 	use Net::Appliance::Session;
 	use Getopt::Long;
+	use Term::ANSIColor;
+
 	
 	my $version = "0.2";
 	my %opt = (
@@ -11,7 +13,7 @@
 			"ip"		=> 0,
 			"login"		=> 0,
 			"password"	=> 0,
-			"secret"	=> 0,
+			"enable"	=> 0,
 	);
 
 	GetOptions(\%opt,
@@ -20,14 +22,15 @@
 			'ip=s',
 			'login=s',
 			'password=s',
-			'secret=s',
+			'enable=s',
 	);
 	if (defined $opt{'help'} && $opt{'help'} == 1) { 
 			&usage;
 	}
 
 	sub usage {
-			 print "-i, --ip		Host IP\n".
+			 print 
+			 "-i, --ip		Host IP\n".
 			 "-l, --login		Username\n".
 			 "-p, --password		Password\n".
 			 "-e, --enable		Secret Password\n".
@@ -54,23 +57,36 @@
 			print "Password: ";
 			chomp ($opt{'password'} = <STDIN>);
 	}
-	if (defined $opt{'secret'} && $opt{'secret'} eq 0){
+	if (defined $opt{'enable'} && $opt{'enable'} eq 0){
 			print "Enable Password: ";
-			chomp ($opt{'secret'} = <STDIN>);
+			chomp ($opt{'enable'} = <STDIN>);
 	}
 
 
 	my $ssh = Net::Appliance::Session->new({ 
 		personality => 'ios',
 		transport => 'SSH',
+		timeout => '4',
 		host => $opt{ip}
 	});
 	$ssh->connect({
 		username => $opt{login}, 
-		password => $opt{password},
-		privileged_password => $opt{secret}
-		});
-	$ssh->begin_privileged;
-	print $ssh->cmd('show errdisable recovery');
+		password => $opt{password}
+		}) ;
+	$ssh->begin_privileged({ password => $opt{enable}});
+	print my $errdisable = $ssh->cmd( 'show errdisable recovery' );
+	if ($errdisable =~ m/Gi\w+\/\w+\/\w+/i){ #Вычленяем строку вида gi91/0/1
+		print color 'red';
+		print "Found $&\n";
+		print color 'reset';
+	}else {
+		print "Not found\n";
+		$ssh->end_privileged;
+		$ssh ->close;
+		exit;
+	}
+	
+
+	
 	$ssh->end_privileged;
 	$ssh ->close;
