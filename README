@@ -1,2 +1,1 @@
-cisco_srn.pl		show inwentory
-cisco_errdisable.pl	clear errdisable
+cisco_errdisable.pl	clear errdisable 

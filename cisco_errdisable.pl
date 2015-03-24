@@ -3,9 +3,8 @@
 	use warnings;
 	use Net::Appliance::Session; #Cisco ssh
 	use Getopt::Long; #add help
-	use Term::ANSIColor; #print color
 	
-	my $version = "0.3";
+	my $version = "0.3.1";
 	my $port;
 	my $mac;
 	my %opt = (
@@ -45,6 +44,7 @@
 			exit;
 	}
 
+	#if without parametrs
 	if (defined $opt{'ip'} && $opt{'ip'} eq 0){
 			print "Host IP: " ;
 			chomp ($opt{'ip'} = <STDIN>);
@@ -77,33 +77,33 @@
 	my $errdisable = $ssh->cmd( 'show errdisable recovery' );
 	if ($errdisable =~ m/Gi\w+\/\w+\/\w+/i){ #Вычленяем строку вида gi91/0/1
 		$port = $&;
-		print color 'red';
-		print "Found $port\n";
-		print color 'reset';
+		print "Found errdisable port $port.\n";
 	}else {
-		print color 'green';
-		print "Not found errdisable port\n";
-		print color 'reset';
+		print "Not found errdisable port.\n";
 		$ssh->end_privileged;
 		$ssh ->close;
 		exit;
 	}
 	
 	my $port_sec = $ssh->cmd( "show port-security interface $port | include Last" ); 
-		print "$port_sec";
 		if ($port_sec =~ m/(\w+.\w+.\w+):\d/i){
 			$mac = $1;
-			print color 'red';
-			print "Last mac adress $mac\n";
-			print color 'reset';
+			print "Last mac adress $mac.\n";
 		}else{
+			print "Not found mac address.\n";
 			$ssh->end_privileged;
 			$ssh ->close;
+			exit;
 		}
 	
 	$ssh->cmd( "clear port-security sticky interface $port" );
-	print "interface cleared\n";
-	$ssh->cmd( "clear port-security sticky address $mac" );
-	print "address cleared\n";
+	$ssh->cmd( "clear port-security sticky address $mac." );
+	$ssh->begin_configure;
+	$ssh->cmd ( "interface $port" );
+	$ssh->cmd ( "shutdown" );
+	$ssh->cmd ( "no shutdown" );
+	$ssh->end_configure;
 	$ssh->end_privileged;
 	$ssh ->close;
+	print "Interface - $port cleared.\n";
+	print "MAC address - $mac cleared\n";
