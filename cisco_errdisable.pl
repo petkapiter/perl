@@ -5,7 +5,7 @@
 	use Getopt::Long; #add help
 	use Term::ANSIColor; #print color
 	
-	my $version = "0.2";
+	my $version = "0.3";
 	my $port;
 	my $mac;
 	my %opt = (
