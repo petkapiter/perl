@@ -3,6 +3,5 @@ cisco_errdisable.pl
                          -l, --login           Username
                          -p, --password        Password
                          -e, --enable          Secret Password
-                         -h, --help            Display this help and exit
                          -v, --version         Print version info
-
+			 -h, --help            Display this help and exit

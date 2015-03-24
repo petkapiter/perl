@@ -62,7 +62,7 @@
 			print "Enable Password: ";
 			chomp ($opt{'enable'} = <STDIN>);
 	}
-
+		
 	my $ssh = Net::Appliance::Session->new({ 
 		personality => 'ios',
 		transport => 'SSH',
@@ -107,3 +107,16 @@
 	$ssh ->close;
 	print "Interface - $port cleared.\n";
 	print "MAC address - $mac cleared\n";
+
+	sub yan {
+			use Term::ReadKey;
+			ReadMode 4;
+			my $key = '';
+			while ($key !~ /(Y|N)/i){
+				1 while defined ReadKey -1; # discard any previous input
+				print "Type Y/N: ";
+				$key = ReadKey 0; # read a single character
+			}
+			ReadMode 0;
+			return $key
+}
