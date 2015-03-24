@@ -1,1 +1,8 @@
-cisco_errdisable.pl	clear errdisable 
+cisco_errdisable.pl	 
+			 -i, --ip              Host IP
+                         -l, --login           Username
+                         -p, --password        Password
+                         -e, --enable          Secret Password
+                         -h, --help            Display this help and exit
+                         -v, --version         Print version info
+
