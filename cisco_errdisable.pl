@@ -121,5 +121,5 @@ sub yanq {
 		$key = ReadKey 0; # read a single character
 	}
 	ReadMode 0;
-	return $key
+	return $key;
 }
