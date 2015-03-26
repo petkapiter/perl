@@ -48,11 +48,11 @@ if (defined $opt{'ip'} && $opt{'ip'} eq 0){
 		print ( "Host IP: " );
 		chomp ($opt{'ip'} = <STDIN>);
 }
- if (defined $opt{'login'} && $opt{'login'} eq 0){
+if (defined $opt{'login'} && $opt{'login'} eq 0){
  		print ( "Username: " );
  		chomp ($opt{'login'} = <STDIN>);
 }
-	if (defined $opt{'password'} && $opt{'password'} eq 0){
+if (defined $opt{'password'} && $opt{'password'} eq 0){
 		print ( "Password: " );
 		chomp ($opt{'password'} = <STDIN>);
 }
@@ -62,64 +62,63 @@ if (defined $opt{'enable'} && $opt{'enable'} eq 0){
 }
 	
 my $ssh = Net::Appliance::Session->new({ 
-	personality => 'ios',
-	transport => 'SSH',
-	timeout => '4',
-	host => $opt{ip}
+		personality => 'ios',
+		transport => 'SSH',
+		timeout => '4',
+		host => $opt{ip}
 });
 $ssh->connect({
-	username => $opt{login}, 
-	password => $opt{password}
-	}) ;
+		username => $opt{login}, 
+		password => $opt{password}
+}) ;
 my $errdisable = $ssh->cmd( 'show errdisable recovery' );
 print ( "$errdisable\n" );
 
 if ($errdisable =~ m/Gi\w+\/\w+\/\w+/i){ #Вычленяем строку вида gi91/0/1
-	$port = $&;
-	$question = yanq();
-	print ( "$question\n" );
+		$port = $&;
+		ssh->begin_privileged({ password => $opt{enable}});
+		my $port_sec = $ssh->cmd( "show port-security interface $port | include Last" ); 
+			if ($port_sec =~ m/(\w+.\w+.\w+):\d/i){
+				$mac = $1;
+				print ( "Bad mac adress $mac.\n" );
+			}else{
+				print ( "Not found mac address.\n" );
+				$ssh->end_privileged;
+				$ssh ->close;
+				exit;
+			}
+		$question = yanq();
+		print ( "$question\n" );
 
 }else {
-	print ( "Not found errdisable port.\n" );
-	$ssh ->close; 
-	exit;
+		print ( "Not found errdisable port.\n" );
+		$ssh ->close; 
+		exit;
 }
 if ($question =~ /y/i){
-	$ssh->begin_privileged({ password => $opt{enable}});
-	my $port_sec = $ssh->cmd( "show port-security interface $port | include Last" ); 
-		if ($port_sec =~ m/(\w+.\w+.\w+):\d/i){
-			$mac = $1;
-			print ( "Bad mac adress $mac.\n" );
-		}else{
-			print ( "Not found mac address.\n" );
-			$ssh->end_privileged;
-			$ssh ->close;
-			exit;
-		}
-	
-	$ssh->cmd( "clear port-security sticky interface $port" );
-	$ssh->cmd( "clear port-security sticky address $mac." );
-	$ssh->begin_configure;
-	$ssh->cmd ( "interface $port" );
-	$ssh->cmd ( "shutdown" );
-	$ssh->cmd ( "no shutdown" );
-	$ssh->end_configure;
-	$ssh->end_privileged;
-	$ssh ->close;
-	print ( "Interface - $port cleared.\n" );
-	print ( "MAC address - $mac cleared\n" );
+				$ssh->cmd( "clear port-security sticky interface $port" );
+		$ssh->cmd( "clear port-security sticky address $mac." );
+		$ssh->begin_configure;
+		$ssh->cmd ( "interface $port" );
+		$ssh->cmd ( "shutdown" );
+		$ssh->cmd ( "no shutdown" );
+		$ssh->end_configure;
+		$ssh->end_privileged;
+		$ssh ->close;
+		print ( "Interface - $port cleared.\n" );
+		print ( "MAC address - $mac cleared\n" );
 }else {
-	print ( "Cancel\n" );
+		print ( "Cancel\n" );
 }
 sub yanq {
-	use Term::ReadKey;
-	ReadMode 4;
-	my $key = '';
-	while ($key !~ /(Y|N)/i){
-		1 while defined ReadKey -1; # discard any previous input
-		print ( "Do you wont clear $port (Y/N): " );
-		$key = ReadKey 0; # read a single character
-	}
-	ReadMode 0;
-	return $key;
+		use Term::ReadKey;
+		ReadMode 4;
+		my $key = '';
+		while ($key !~ /(Y|N)/i){
+			1 while defined ReadKey -1; # discard any previous input
+			print ( "Do you wont clear $port (Y/N): " );
+			$key = ReadKey 0; # read a single character
+		}
+		ReadMode 0;
+		return $key;
 }
