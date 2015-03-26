@@ -76,7 +76,7 @@ print ( "$errdisable\n" );
 
 if ($errdisable =~ m/Gi\w+\/\w+\/\w+/i){ #Вычленяем строку вида gi91/0/1
 		$port = $&;
-		ssh->begin_privileged({ password => $opt{enable}});
+		$ssh->begin_privileged({ password => $opt{enable}});
 		my $port_sec = $ssh->cmd( "show port-security interface $port | include Last" ); 
 			if ($port_sec =~ m/(\w+.\w+.\w+):\d/i){
 				$mac = $1;
@@ -96,7 +96,7 @@ if ($errdisable =~ m/Gi\w+\/\w+\/\w+/i){ #Вычленяем строку вид
 		exit;
 }
 if ($question =~ /y/i){
-				$ssh->cmd( "clear port-security sticky interface $port" );
+		$ssh->cmd( "clear port-security sticky interface $port" );
 		$ssh->cmd( "clear port-security sticky address $mac." );
 		$ssh->begin_configure;
 		$ssh->cmd ( "interface $port" );
