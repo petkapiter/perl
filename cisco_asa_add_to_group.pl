@@ -6,7 +6,7 @@ use Net::Appliance::Session;
 use Getopt::Long; #add help
 
 my $version = "0.1";
-my $group = "UserGtoup";
+my $group = "UserGroup";
 my %opt = (
 			"version"	=> 0,
 			"help"		=> 0,
