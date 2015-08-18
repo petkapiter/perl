@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use Net::Appliance::Session;
-use Getopt::Long; #add help
+use Getopt::Long;
 
 my $version = "0.1";
 my $group = "UserGroup";
@@ -46,7 +46,6 @@ print ( "Add to WS-Users group - (C) 2015 version $version\n" );
 exit;
 }
 
-#if without parametrs
 if (defined $opt{'ip'} && $opt{'ip'} eq 0){
 print ( "Host IP: " );
 chomp ($opt{'ip'} = <STDIN>);
