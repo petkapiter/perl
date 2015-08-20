@@ -6,7 +6,6 @@ use Net::Appliance::Session;
 use Getopt::Long;
 
 my $version = "0.1";
-my $group = "UserGroup";
 my %opt = (
 			"version"	=> 0,
 			"help"		=> 0,
@@ -15,6 +14,7 @@ my %opt = (
 			"password"	=> 0,
 			"enable"	=> 0,
 			"bank"		=> 0,
+			"group"		=> 0,
 );
 
 GetOptions(\%opt,
@@ -25,6 +25,7 @@ GetOptions(\%opt,
 				'password=s',
 				'enable=s',
 				'bank=s',
+				'group=s'
 );
 if (defined $opt{'help'} && $opt{'help'} == 1) { 
 &usage;
@@ -38,6 +39,7 @@ sub usage {
 			"-b, --bank		Bank's IP\n".
 			"-h, --help		Display this help and exit\n".
 			"-v, --version		Print version info\n";
+			"-g, --group	ciso asa group\n";
 			exit;
 }
 
@@ -66,6 +68,12 @@ if (defined $opt{'bank'} && $opt{'bank'} eq 0){
 print ( "Bank's IP address: " );
 chomp ($opt{'bank'} = <STDIN>);
 }
+if (defined $opt{'group'} && $opt{'group'} eq 0){
+print ( "Group: " );
+chomp ($opt{'group'} = <STDIN>);
+}
+
+
 
 my $ssh = Net::Appliance::Session->new({ 
 										personality => 'ios',
@@ -81,7 +89,7 @@ $ssh->connect({
 				
 $ssh->begin_privileged({ password => $opt{enable}});
 $ssh->begin_configure;
-$ssh->cmd( "object-group network $group" );
+$ssh->cmd( "object-group network $opt{group}" );
 $ssh->cmd( "network-object host $opt{bank}" );
 $ssh->cmd( "write memory" );
 $ssh->end_configure;
