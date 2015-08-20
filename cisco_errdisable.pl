@@ -43,15 +43,10 @@ if (defined $opt{'help'} && $opt{'help'} == 1) {
 		print ( "Cisco_errdisable - (C) 2015 version $version\n" );
 		exit;
 }
-	#if without parametrs
+
 if (defined $opt{'ip'} && $opt{'ip'} eq 0){
 		print ( "Host IP: " );
 		chomp ($opt{'ip'} = <STDIN>);
-#		if ($opt{'ip'} =~ /\|/){
-#			print ( "Are You Hacker? Fuck You\n" );
-#			exit;
-#			}
-
 }
 if (defined $opt{'login'} && $opt{'login'} eq 0){
  		print ( "Username: " );
