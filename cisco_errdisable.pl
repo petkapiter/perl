@@ -47,6 +47,11 @@ if (defined $opt{'help'} && $opt{'help'} == 1) {
 if (defined $opt{'ip'} && $opt{'ip'} eq 0){
 		print ( "Host IP: " );
 		chomp ($opt{'ip'} = <STDIN>);
+#		if ($opt{'ip'} =~ /\|/){
+#			print ( "Are You Hacker? Fuck You\n" );
+#			exit;
+#			}
+
 }
 if (defined $opt{'login'} && $opt{'login'} eq 0){
  		print ( "Username: " );
@@ -70,7 +75,7 @@ my $ssh = Net::Appliance::Session->new({
 $ssh->connect({
 		username => $opt{login}, 
 		password => $opt{password}
-}) ;
+});
 my $errdisable = $ssh->cmd( 'show errdisable recovery' );
 print ( "$errdisable\n" );
 
@@ -96,6 +101,7 @@ if ($errdisable =~ m/Gi\w+\/\w+\/\w+/i){ #Вычленяем строку вид
 		exit;
 }
 if ($question =~ /y/i){
+		$ssh->begin_privileged({ password => $opt{enable}});
 		$ssh->cmd( "clear port-security sticky interface $port" );
 		$ssh->cmd( "clear port-security sticky address $mac." );
 		$ssh->begin_configure;
