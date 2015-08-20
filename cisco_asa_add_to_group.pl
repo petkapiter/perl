@@ -37,9 +37,9 @@ sub usage {
 			"-p, --password		Password\n".
 			"-e, --enable		Secret Password\n".
 			"-b, --bank		Bank's IP\n".
+			"-g, --group		Cisco ASA group\n".
 			"-h, --help		Display this help and exit\n".
 			"-v, --version		Print version info\n";
-			"-g, --group	ciso asa group\n";
 			exit;
 }
 
