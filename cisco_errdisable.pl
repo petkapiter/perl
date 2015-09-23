@@ -96,6 +96,7 @@ if ($errdisable =~ m/Gi\w+\/\w+\/\w+/i){ #Вычленяем строку вид
 		exit;
 }
 if ($question =~ /y/i){
+#		print( "$opt{enable}\n" );	
 		$ssh->begin_privileged({ password => $opt{enable}});
 		$ssh->cmd( "clear port-security sticky interface $port" );
 		$ssh->cmd( "clear port-security sticky address $mac." );
