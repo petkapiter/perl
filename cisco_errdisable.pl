@@ -2,8 +2,8 @@
 
 use strict;
 use warnings;
-use Net::Appliance::Session; #Cisco ssh
-use Getopt::Long; #add help
+use Net::Appliance::Session;
+use Getopt::Long;
 	
 my $version = "0.3.2";
 my $port;
