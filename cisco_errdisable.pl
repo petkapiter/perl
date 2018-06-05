@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+OD
 use strict;
 use warnings;
 use Net::Appliance::Session;
